@@ -3,7 +3,7 @@
 	url = https://github.com/directus/directus.git
 [submodule "directus-manager"]
 	path = directus-manager
-	url = https://github.com/ddhoogduin/webapp-gen-directus-manager.git
+	url = https://github.com/LUMC/directus-manager.git
 [submodule "template"]
 	path = template
-	url = https://github.com/ddhoogduin/wg-app-template.git
+	url = https://github.com/LUMC/wg-app-template.git
