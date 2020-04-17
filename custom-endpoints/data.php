@@ -21,7 +21,8 @@ return [
 
             $select = new \Zend\Db\Sql\Select();
             $select->from('transcript_mv');
-            $select->where('tissue',$tissueID);
+            $select->join("gene", "gene.id = gene", array("ensg", "symbol"), $select::JOIN_LEFT);
+            $select->where(array("tissue" => $tissueID));
             $select->order('count_avg DESC');
             $select->limit($amount);
             $genes = $tableGateway->selectWith($select);
@@ -33,11 +34,12 @@ return [
             $select = new \Zend\Db\Sql\Select('transcript');
             $select->columns(array('tissue', 'gene', 'stage', 'count'));
             $select->where->in('gene', $geneIds);
+            $select->where(array("tissue" => $tissueID));
             $result = $tableGateway->selectWith($select);
             $counts = $result->toArray();
             return $response->withJson([
-                'counts'=> $counts,
-                'genes'=> $genes
+                'genes'=> $genes,
+                'counts' => $counts
             ]);
         }
     ],
