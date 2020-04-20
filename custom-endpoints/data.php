@@ -33,6 +33,7 @@ return [
             }
             $select = new \Zend\Db\Sql\Select('transcript');
             $select->columns(array('tissue', 'gene', 'stage', 'count'));
+            $select->join("gene", "gene.id = gene", array("ensg"), $select::JOIN_LEFT);
             $select->where->in('gene', $geneIds);
             $select->where(array("tissue" => $tissueID));
             $result = $tableGateway->selectWith($select);
