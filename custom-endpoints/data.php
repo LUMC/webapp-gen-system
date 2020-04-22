@@ -21,8 +21,9 @@ return [
 
             $select = new \Zend\Db\Sql\Select();
             $select->from('transcript_mv');
-            $select->join("gene", "gene.id = gene", array("ensg", "symbol"), $select::JOIN_LEFT);
+            $select->join("gene", "gene.id = gene", array("ensg", "symbol", "description"), $select::JOIN_LEFT);
             $select->where(array("tissue" => $tissueID));
+            $select->where->isNotNull('symbol');
             $select->order('count_avg DESC');
             $select->limit($amount);
             $genes = $tableGateway->selectWith($select);
