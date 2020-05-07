@@ -11,6 +11,7 @@ return [
         'handler' => function (Request $request, Response $response) {
             $tissueID = $request->getParam('tissueId');
             $amount = $request->getParam('amount');
+            $group = $request->getParam('adult');
             if($tissueID < 1 or $amount < 1){
                 return $response->isClientError();
             }
@@ -23,6 +24,12 @@ return [
             $select->from('transcript_mv');
             $select->join("gene", "gene.id = gene", array("ensg", "symbol", "description"), $select::JOIN_LEFT);
             $select->where(array("tissue" => $tissueID));
+            if($group >= 0){
+                $select->where(array("adult_only" => $group));
+            }
+            else{
+                $select->where(array("adult_only" => Null));
+            }
             $select->where->isNotNull('symbol');
             $select->order('count_avg DESC');
             $select->limit($amount);
