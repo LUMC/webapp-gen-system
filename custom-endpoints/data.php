@@ -40,8 +40,15 @@ return [
                 array_push($geneIds, $value['gene']);
             }
             $select = new \Zend\Db\Sql\Select('transcript');
-            $select->columns(array('tissue', 'gene', 'stage', 'count'));
+            $select->columns(array('tissue', 'gene', 'stage', 'count', 'CPM'));
             $select->join("gene", "gene.id = gene", array("ensg", "symbol"), $select::JOIN_LEFT);
+            $select->join("stage", "stage.id = stage", array("name"), $select::JOIN_LEFT);
+            if($group == 0){
+                $select->where->notEqualTo(array("name" => 'adult'));
+            }
+            elseif($group == 1){
+                $select->where(array("name" => 'adult'));
+            }
             $select->where->in('gene', $geneIds);
             $select->where(array("tissue" => $tissueID));
             $result = $tableGateway->selectWith($select);
