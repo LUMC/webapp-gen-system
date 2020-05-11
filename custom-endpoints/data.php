@@ -44,7 +44,7 @@ return [
             $select->join("gene", "gene.id = gene", array("ensg", "symbol"), $select::JOIN_LEFT);
             $select->join("stage", "stage.id = stage", array("name"), $select::JOIN_LEFT);
             if($group == 0){
-                $select->where->notEqualTo(array("name" => 'adult'));
+                $select->where->notEqualTo("name", 'adult');
             }
             elseif($group == 1){
                 $select->where(array("name" => 'adult'));
