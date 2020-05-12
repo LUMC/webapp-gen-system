@@ -39,6 +39,12 @@ return [
             foreach ($genes as $key => $value){
                 array_push($geneIds, $value['gene']);
             }
+            if(count($geneIds) < 1 ){
+                return $response->withJson([
+                    'genes'=> [],
+                    'counts' => []
+                ]);
+            }
             $select = new \Zend\Db\Sql\Select('transcript');
             $select->columns(array('tissue', 'gene', 'stage', 'count', 'CPM'));
             $select->join("gene", "gene.id = gene", array("ensg", "symbol"), $select::JOIN_LEFT);
