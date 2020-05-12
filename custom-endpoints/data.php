@@ -31,7 +31,7 @@ return [
                 $select->where(array("adult_only" => Null));
             }
             $select->where->isNotNull('symbol');
-            $select->order('count_avg DESC');
+            $select->order('CPM_avg DESC');
             $select->limit($amount);
             $genes = $tableGateway->selectWith($select);
             $geneIds = array();
@@ -49,10 +49,10 @@ return [
             $select->columns(array('tissue', 'gene', 'stage', 'count', 'CPM'));
             $select->join("gene", "gene.id = gene", array("ensg", "symbol"), $select::JOIN_LEFT);
             $select->join("stage", "stage.id = stage", array("name"), $select::JOIN_LEFT);
-            if($group == 0){
+            if($group === 0){
                 $select->where->notEqualTo("name", 'adult');
             }
-            elseif($group == 1){
+            elseif($group === 1){
                 $select->where(array("name" => 'adult'));
             }
             $select->where->in('gene', $geneIds);
