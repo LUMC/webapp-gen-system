@@ -65,6 +65,26 @@ return [
             ]);
         }
     ],
+    'cell-GE' => [
+        'method' => 'POST',
+        'handler' => function (Request $request, Response $response) {
+            $geneId = $request->getParam('geneId');
+            if($geneId < 1){
+                return $response->isClientError();
+            }
+            $container = \Directus\Application\Application::getInstance()->getContainer();
+            $dbConnection = $container->get('database');
+            $tableGateway = new \Zend\Db\TableGateway\TableGateway('directus_users', $dbConnection);
+            $select = new \Zend\Db\Sql\Select();
+            $select->from('expression', array('CPM'));
+            $select->join("cell", "cell.id = cell", array("cluster_id", "tsne_1", "tsne_2"), $select::JOIN_LEFT);
+            $select->where(array("gene" => $geneId));
+            $cells = $tableGateway->selectWith($select);
+            return $response->withJson([
+                'cells'=> $cells
+            ]);
+        }
+    ],
     '/datetime' => [
         'group' => true,
         'endpoints' => [
