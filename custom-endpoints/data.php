@@ -81,12 +81,14 @@ return [
             $select->where(array("gene" => $geneId));
             $cells = $tableGateway->selectWith($select)->toArray();
 
-            $sql = "SELECT MAX(CPM) as maxCPM from expression where gene = '$geneId'";
-            $maxCPM = $tableGateway->getAdapter()->driver->getConnection()->execute($sql);
+            $select = new \Zend\Db\Sql\Select();
+            $select->from("expression", array("maxCPM" => new Zend_Db_Expr('MAX(CPM)')));
+            $select->where(array("gene" => $geneId));
+            $maxCPM = $tableGateway->selectWith($select)->toArray();
 
             return $response->withJson([
                 'cells'=> $cells,
-                'maxCPM' => $maxCPM->current()->maxCPM
+                'maxCPM' => $maxCPM
             ]);
         }
     ],
