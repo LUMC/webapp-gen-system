@@ -79,9 +79,16 @@ return [
             $select->from('expression', array('CPM'));
             $select->join("cell", "cell.id = cell", array("cluster_id", "tsne_1", "tsne_2"), $select::JOIN_LEFT);
             $select->where(array("gene" => $geneId));
-            $cells = $tableGateway->selectWith($select);
+            $cells = $tableGateway->selectWith($select)->toArray();
+
+            $select = new \Zend\Db\Sql\Select();
+            $select->from("expression", array(new Zend_Db_Expr("MAX(CPM) AS maxCPM")));
+            $select->where(array("gene" => $geneId));
+            $maxCPM = $tableGateway->selectWith($select)->toArray();
+
             return $response->withJson([
-                'cells'=> $cells
+                'cells'=> $cells,
+                'maxCPM' => $maxCPM
             ]);
         }
     ],
