@@ -82,7 +82,7 @@ return [
             $cells = $tableGateway->selectWith($select)->toArray();
 
             $select = new \Zend\Db\Sql\Select();
-            $select->from("expression", array(new Zend_Db_Expr("MAX(CPM) AS maxCPM")));
+            $select->from("expression", array("maxCPM" => "MAX(CPM)"));
             $select->where(array("gene" => $geneId));
             $maxCPM = $tableGateway->selectWith($select)->toArray();
 
