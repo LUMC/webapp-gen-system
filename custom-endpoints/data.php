@@ -76,16 +76,17 @@ return [
             $dbConnection = $container->get('database');
             $tableGateway = new \Zend\Db\TableGateway\TableGateway('directus_users', $dbConnection);
             $select = new \Zend\Db\Sql\Select();
-            $select->from('expression', array('CPM'));
+            $select->from('expression');
+            $select->columns(array('CPM'));
             $select->join("cell", "cell.id = cell", array("cluster_id", "tsne_1", "tsne_2"), $select::JOIN_LEFT);
             $select->where(array("gene" => $geneId));
             $cells = $tableGateway->selectWith($select)->toArray();
 
             $select = new \Zend\Db\Sql\Select();
-            $select->from("expression", array("maxCPM" => new Zend_Db_Expr('MAX(CPM)')));
+            $select->from("expression");
+            $select->columns(array("maxCPM" => new Zend\Db\Sql\Expression("MAX(CPM)")));
             $select->where(array("gene" => $geneId));
             $maxCPM = $tableGateway->selectWith($select)->toArray();
-
             return $response->withJson([
                 'cells'=> $cells,
                 'maxCPM' => $maxCPM
