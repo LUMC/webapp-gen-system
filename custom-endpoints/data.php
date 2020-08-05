@@ -78,7 +78,7 @@ return [
             $tableGateway = new \Zend\Db\TableGateway\TableGateway('directus_users', $dbConnection);
             $select = new \Zend\Db\Sql\Select();
             $select->from('cell');
-            $select->columns(array("cluster_id", "tsne_1", "tsne_2"));
+            $select->columns(array("dataset", "cluster_id", "tsne_1", "tsne_2"));
             $select->join("expression", "cell.id = cell", array("CPM"), $select::JOIN_LEFT);
             $select->where(array("dataset" => $dataset));
             $select->where(array("gene" => $geneId));
