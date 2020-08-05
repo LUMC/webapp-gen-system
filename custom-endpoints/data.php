@@ -69,27 +69,23 @@ return [
         'method' => 'POST',
         'handler' => function (Request $request, Response $response) {
             $geneId = $request->getParam('geneId');
-            if($geneId < 1){
+            $dataset = $request->getParam('dataset');
+            if($geneId < 1 or $dataset < 1){
                 return $response->isClientError();
             }
             $container = \Directus\Application\Application::getInstance()->getContainer();
             $dbConnection = $container->get('database');
             $tableGateway = new \Zend\Db\TableGateway\TableGateway('directus_users', $dbConnection);
             $select = new \Zend\Db\Sql\Select();
-            $select->from('expression');
-            $select->columns(array('CPM'));
-            $select->join("cell", "cell.id = cell", array("cluster_id", "tsne_1", "tsne_2"), $select::JOIN_LEFT);
+            $select->from('cell');
+            $select->columns(array("cluster_id", "tsne_1", "tsne_2"));
+            $select->join("expression", "cell.id = cell", array("CPM"), $select::JOIN_LEFT);
+            $select->where(array("dataset" => $dataset));
             $select->where(array("gene" => $geneId));
             $cells = $tableGateway->selectWith($select)->toArray();
 
-            $select = new \Zend\Db\Sql\Select();
-            $select->from("expression");
-            $select->columns(array("maxCPM" => new Zend\Db\Sql\Expression("MAX(CPM)")));
-            $select->where(array("gene" => $geneId));
-            $maxCPM = $tableGateway->selectWith($select)->toArray();
             return $response->withJson([
                 'cells'=> $cells,
-                'maxCPM' => $maxCPM
             ]);
         }
     ],
