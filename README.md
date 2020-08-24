@@ -41,6 +41,13 @@ It may be required to give permissions to the directus folder.
 ```sh
 $ sudo chmod -R 777 ./directus 
 ```
+
+Also make sure that the database user which will be used by directus has been granted all privileges:
+```
+GRANT ALL PRIVILEGES ON * . * TO '<database user>'@'localhost';
+FLUSH PRIVILEGES;
+```
+
 Transfer the wished data-template migration to an empty MySQL-database (located in ./data-templates).
 
 
